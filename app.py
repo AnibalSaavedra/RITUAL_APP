@@ -1,6 +1,7 @@
 
 import streamlit as st
 from modulo_disociacion import modulo_disociacion
+from modulo_epigenetico import modulo_epigenetico
 
 st.set_page_config(page_title="MBI 360° – Evaluación Integral del Ser", layout="centered")
 
