@@ -8,7 +8,7 @@ from io import BytesIO
 def modulo_disociacion():
     st.header("Test de Disociación o Trauma (DES-II)")
     st.markdown("Este módulo evalúa la presencia de disociación psíquica, una desconexión emocional o fragmentación del yo que puede tener origen en eventos traumáticos.")
-    st.markdown("**Instrucciones:** Lee cada afirmación y responde cuánto te identificas con ella del 1 al 5. Si no entiendes alguna afirmación, puedes presionar el botón “¿Qué significa esto?” para una breve explicación.")
+    st.markdown("**Instrucciones:** Lee cada afirmación y responde cuánto te identificas con ella del 1 al 5. Si necesitas ayuda para entender una afirmación, despliega la opción '¿Qué significa esto?'")
 
     afirmaciones = [
         "A menudo siento que no soy yo quien está experimentando lo que hago.",
@@ -36,23 +36,15 @@ def modulo_disociacion():
         "Actuar sin emoción, como si fueras una máquina."
     ]
 
-    if "respuestas" not in st.session_state:
-        st.session_state.respuestas = {}
-    if "mostrar_explicacion" not in st.session_state:
-        st.session_state.mostrar_explicacion = [False]*len(afirmaciones)
+    respuestas = []
 
     for i, pregunta in enumerate(afirmaciones):
-        cols = st.columns([6, 1])
-        with cols[0]:
-            st.session_state.respuestas[i] = st.slider(f"{i+1}. {pregunta}", 1, 5, 3, key=f"slider_{i}")
-        with cols[1]:
-            if st.button("❓", key=f"btn_{i}"):
-                st.session_state.mostrar_explicacion[i] = not st.session_state.mostrar_explicacion[i]
-        if st.session_state.mostrar_explicacion[i]:
-            st.info(f"ℹ️ {explicaciones[i]}")
+        with st.expander(f"{i+1}. {pregunta}"):
+            respuestas.append(st.slider("Tu respuesta (1 = nada, 5 = totalmente de acuerdo)", 1, 5, 3, key=f"resp_{i}"))
+            st.markdown(f"**¿Qué significa esto?** {explicaciones[i]}")
 
     if st.button("Obtener resultados"):
-        puntaje_total = sum(st.session_state.respuestas.values())
+        puntaje_total = sum(respuestas)
         promedio = puntaje_total / len(afirmaciones)
         estado = "Alta disociación" if promedio > 3.5 else "Disociación leve o moderada"
 
